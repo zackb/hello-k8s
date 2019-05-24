@@ -110,7 +110,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
  rules:
- - host: hello-app
+ - host: hello.app
    http:
      paths:
      - path: /*
