@@ -1,0 +1,14 @@
+version: '2'
+
+services:
+    app:
+        container_name: hello-app
+        image: hello-app
+        build:
+            context: .
+        environment:
+            PORT: 8080
+        volumes:
+          - "./bin:/go/src/app/bin"
+        command: "make"
+
