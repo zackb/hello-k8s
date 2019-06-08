@@ -15,17 +15,9 @@ func main() {
 	var MSG string
 	var ENGINE string
 
-	if PORT = os.Getenv("PORT"); PORT == "" {
-		PORT = "8080"
-	}
-
-	if MSG = os.Getenv("MESSAGE"); MSG == "" {
-		MSG = "NONE"
-	}
-
-	if ENGINE = os.Getenv("ENGINE"); ENGINE == "" {
-		ENGINE = "mem"
-	}
+	PORT = getEnv("PORT", "8080")
+	MSG = getEnv("MESSAGE", "NONE")
+	ENGINE = getEnv("ENGINE", "mem")
 
 	var data db.Db
 	if ENGINE == "redis" {
@@ -51,4 +43,12 @@ func main() {
 	http.ListenAndServe(":"+PORT, nil)
 
 	fmt.Println("Initialized")
+}
+
+func getEnv(name string, defaul string) string {
+	var val string
+	if val = os.Getenv(name); val == "" {
+		val = defaul
+	}
+	return val
 }
