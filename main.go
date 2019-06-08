@@ -13,7 +13,7 @@ func main() {
 
 	var PORT string
 	var MSG string
-    var ENGINE string
+	var ENGINE string
 
 	if PORT = os.Getenv("PORT"); PORT == "" {
 		PORT = "8080"
@@ -27,15 +27,15 @@ func main() {
 		ENGINE = "mem"
 	}
 
-    var data db.Db
-    if ENGINE == "redis" {
-	    data = db.NewRedisDb()
-    } else {
-	    data = db.NewMemDb()
-    }
+	var data db.Db
+	if ENGINE == "redis" {
+		data = db.NewRedisDb()
+	} else {
+		data = db.NewMemDb()
+	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-        fmt.Fprintf(w, "%s: Engine: %s\n", MSG, data.Name())
+		fmt.Fprintf(w, "%s: Engine: %s\n", MSG, data.Name())
 
 		key := r.URL.Path
 
