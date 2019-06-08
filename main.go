@@ -38,12 +38,13 @@ func main() {
         fmt.Fprintf(w, "%s: Engine: %s\n", MSG, data.Name())
 
 		key := r.URL.Path
+
 		var err error
 		var value int
 		if value, err = data.Get(key); err != nil {
 			fmt.Fprintf(w, "%s: Error: %s\n", MSG, err.Error())
 		}
-		fmt.Fprintf(w, "%s: Count: %d for %s \n", MSG, value, r.URL.Path)
+		fmt.Fprintf(w, "Count: %d for %s \n", value, key)
 		data.Set(key, value+1)
 	})
 

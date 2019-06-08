@@ -15,6 +15,8 @@
       1. adds the image to the minikube docker registry
 3. Deploy kubernetes app
    1. `kubectl apply -f kubernetes.yml`
+3. OR Deploy with helm
+   1. `make helm-install` or `make helm-upgrade`
 4. Update hosts file (ingress uses hostname: `hello.app`)
    1. CAREFUL: `echo $(minikube ip) hello.app >> /etc/hosts` 
 5. Open app: http://hello.app
