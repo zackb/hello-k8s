@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/zackb/hello-k8s/db"
+	"github.com/zackb/hello-k8s/handler"
 )
 
 func main() {
@@ -25,6 +26,8 @@ func main() {
 	} else {
 		data = db.NewMemDb()
 	}
+
+	http.HandleFunc("/record", handler.HandleRecord)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "%s: Engine: %s\n", MSG, data.Name())
