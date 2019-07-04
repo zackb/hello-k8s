@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/zackb/hello-k8s/db"
-	"github.com/zackb/hello-k8s/handler"
+	"github.com/zackb/hello-k8s/handlers"
 )
 
 func main() {
@@ -27,9 +27,15 @@ func main() {
 		data = db.NewMemDb()
 	}
 
-	http.HandleFunc("/record", handler.HandleRecord)
+	// lewl
+	handlers.Init(data)
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	handler := http.NewServeMux()
+
+	handler.HandleFunc("/record/", handlers.HandleRecord)
+
+	handler.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+
 		fmt.Fprintf(w, "%s: Engine: %s\n", MSG, data.Name())
 
 		key := r.URL.Path
@@ -43,7 +49,7 @@ func main() {
 		data.Set(key, value+1)
 	})
 
-	http.ListenAndServe(":"+PORT, nil)
+	http.ListenAndServe(":"+PORT, handler)
 
 	fmt.Println("Initialized")
 }
