@@ -7,9 +7,10 @@
 
 ### Run
 1. Start minikube
-   1. `minikube start`
-   2. use minikube's docker env `eval $(minikube docker-env)`
-   2. switch to minikube's context `kubectx minikube`
+   1. `minikube addons enable ingress`
+   2. `minikube start`
+   3. use minikube's docker env `eval $(minikube docker-env)`
+   4. switch to minikube's context `kubectx minikube`
 2. Build image
    1. `make docker`
       1. adds the image to the minikube docker registry
