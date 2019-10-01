@@ -1,11 +1,15 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"os"
+	"os/signal"
+	"time"
 
 	"github.com/zackb/hello-k8s/db"
+	"github.com/zackb/hello-k8s/handlers"
 )
 
 func main() {
@@ -26,7 +30,15 @@ func main() {
 		data = db.NewMemDb()
 	}
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	// lewl
+	handlers.Init(data)
+
+	handler := http.NewServeMux()
+
+	handler.HandleFunc("/record/", handlers.HandleRecord)
+
+	handler.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+
 		fmt.Fprintf(w, "%s: Engine: %s\n", MSG, data.Name())
 
 		key := r.URL.Path
@@ -40,9 +52,29 @@ func main() {
 		data.Set(key, value+1)
 	})
 
-	http.ListenAndServe(":"+PORT, nil)
+	server := &http.Server{Addr: ":" + PORT, Handler: handler}
 
-	fmt.Println("Initialized")
+	go func() {
+		fmt.Println("Starting HTTP Server")
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			fmt.Println("ListenAndServe err: ", err)
+		}
+	}()
+
+	sig := make(chan os.Signal, 1)
+
+	signal.Notify(sig, os.Interrupt, os.Kill) //syscall.SIGINT, syscall.SIGTERM)
+
+	<-sig
+
+	fmt.Println("Shutting Down")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := server.Shutdown(ctx); err != nil {
+		fmt.Println("Failed shutting down", err)
+	}
+
 }
 
 func getEnv(name string, defaul string) string {

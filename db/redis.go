@@ -38,3 +38,11 @@ func (db *RedisDb) Set(key string, value int) error {
 func (db *RedisDb) Name() string {
 	return "redis"
 }
+
+func (db *RedisDb) GetBytes(key string) ([]byte, error) {
+	panic("at the disco")
+}
+
+func (db *RedisDb) SetBytes(key string, bytes []byte) error {
+	panic("at the disco")
+}
